@@ -1,5 +1,5 @@
 import { supabase } from "./supabaseClient";
-
+import { getCurrentUserId } from "./auth";
 /**
  * Records an outfit in the database.
  * @param {Object} outfit - The outfit details.
@@ -9,10 +9,10 @@ import { supabase } from "./supabaseClient";
  * @param {string[]} outfit.crowd - Array of people or groups who will see the outfit.
  * @returns {Promise<void>}
  */
-export const recordOutfit = async (outfit) => {
+export const recordOutfit = async (outfit, uid) => {
   const { data, error } = await supabase.from("outfits").insert([
     {
-      user_id: supabase.auth.user().id, // Use the current user's ID
+      user_id: uid, // Use the current user's ID
       outfit_items: outfit.outfit_items,
       wear_date: outfit.wear_date.toISOString().split("T")[0], // Format date as YYYY-MM-DD
       purpose: outfit.purpose,

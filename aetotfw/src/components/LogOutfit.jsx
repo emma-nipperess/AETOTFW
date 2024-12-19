@@ -12,13 +12,15 @@ import {
   CardContent,
   Grid2,
 } from "@mui/material";
-import { fetchClothes } from "../service/clothes";
+import { fetchClothes, getItemImage } from "../service/clothes";
 import { recordOutfit, checkPreviousOutfits } from "../service/outfits";
+import { getCurrentUserId } from "../service/auth";
+import { useNavigate } from "react-router-dom";
 
 const LogOutfit = () => {
+  const navigate = useNavigate();
   const [clothes, setClothes] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [wearToday, setWearToday] = useState(true);
   const [wearDate, setWearDate] = useState(new Date());
   const [purpose, setPurpose] = useState("");
   const [crowd, setCrowd] = useState("");
@@ -33,19 +35,26 @@ const LogOutfit = () => {
   // Modal state
   const [openModal, setOpenModal] = useState(false);
   const [modalCategory, setModalCategory] = useState("");
-
   useEffect(() => {
-    const loadClothes = async () => {
+    const loadClothesWithImages = async () => {
       try {
         const data = await fetchClothes();
-        console.log(data, clothes)
-        setClothes(data);
+
+        // Fetch public URLs for each clothing item's front photo
+        const clothesWithImages = await Promise.all(
+          data.map(async (item) => {
+            const imageUrl = await getItemImage(item.front_photo); // Get the image URL
+            return { ...item, image: imageUrl };
+          })
+        );
+
+        setClothes(clothesWithImages);
       } catch (error) {
         console.error("Error loading clothes:", error.message);
       }
     };
 
-    loadClothes();
+    loadClothesWithImages();
   }, []);
 
   const handleItemSelect = (item, type) => {
@@ -76,17 +85,20 @@ const LogOutfit = () => {
 
   const handleSubmit = async () => {
     try {
+      const uid = await getCurrentUserId();
+
       await recordOutfit({
         outfit_items: selectedItems,
-        wear_date: wearToday ? new Date() : wearDate,
+        wear_date: wearDate,
         purpose,
         crowd: crowd.split(",").map((person) => person.trim()),
-      });
+      }, uid);
 
       const flagged = await checkPreviousOutfits(selectedItems, crowd);
       setFlaggedOutfits(flagged);
 
       alert("Outfit recorded successfully!");
+      window.location.href = "/"
     } catch (error) {
       console.error("Error recording outfit:", error.message);
     }
@@ -119,13 +131,11 @@ const LogOutfit = () => {
           Log Your Outfit
         </Typography>
 
-        <Typography> Outfit for when: </Typography>
         <ReactDatePicker
-          selected={wearToday ? new Date() : wearDate}
-          onChange={(date) => setWearDate(date)}
-          dateFormat="yyyy-MM-dd"
-          placeholderText="Select a date"
+            selected={wearDate} // Bind the date picker to wearDate
+            onChange={(date) => setWearDate(date)} // Update wearDate when the user selects a date
         />
+
 
         <TextField
           label="Purpose"

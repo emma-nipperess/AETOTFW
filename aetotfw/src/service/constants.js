@@ -1,6 +1,7 @@
 export const GARMENT_TYPES = [
     "T-Shirt",
-    "Shirt",
+    "Singlet",
+    "Blouse",
     "Pants",
     "Shorts",
     "Dress",
@@ -8,7 +9,6 @@ export const GARMENT_TYPES = [
     "Sweater",
     "Skirt",
     "Shoes",
-    "Accessories",
   ];
 
   export const SEASONS = ["Winter", "Spring", "Summer", "Autumn"];

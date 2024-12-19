@@ -2,9 +2,7 @@ import React, { useState } from "react";
 import { Box, TextField, Button, Typography, MenuItem } from "@mui/material";
 import { uploadPhoto, saveClothingItem } from "../service/upload"; // Import upload functions
 import { getCurrentUserId } from "../service/auth";
-
-const garmentTypes = ["Shirt", "Pants", "Dress", "Jacket", "Skirt", "Shoes"];
-const seasons = ["Spring", "Summer", "Autumn", "Winter"];
+import { GARMENT_TYPES, SEASONS } from "../service/constants";
 
 const UploadClothes = () => {
   const [name, setName] = useState("");
@@ -102,7 +100,7 @@ const UploadClothes = () => {
           value={garmentType}
           onChange={(e) => setGarmentType(e.target.value)}
         >
-          {garmentTypes.map((type) => (
+          {GARMENT_TYPES.map((type) => (
             <MenuItem key={type} value={type}>
               {type}
             </MenuItem>
@@ -117,7 +115,7 @@ const UploadClothes = () => {
           value={season}
           onChange={(e) => setSeason(e.target.value)}
         >
-          {seasons.map((season) => (
+          {SEASONS.map((season) => (
             <MenuItem key={season} value={season}>
               {season}
             </MenuItem>

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { Box, Typography, Button, AppBar, Toolbar } from "@mui/material";
+import { Box, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import { getCurrentUser, logoutUser } from "../service/auth"; // Import auth functions
+import { getCurrentUser } from "../service/auth"; // Import auth functions
 import Inventory2Icon from "@mui/icons-material/Inventory2"; // Closet icon
 
 const Home = () => {

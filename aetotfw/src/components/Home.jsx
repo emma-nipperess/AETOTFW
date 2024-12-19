@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Box, Typography, Button, AppBar, Toolbar } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser, logoutUser } from "../service/auth"; // Import auth functions
+import Inventory2Icon from "@mui/icons-material/Inventory2"; // Closet icon
 
 const Home = () => {
   const [user, setUser] = useState(null);
@@ -20,68 +21,11 @@ const Home = () => {
     fetchUser();
   }, []);
 
-  const handleLogout = async () => {
-    const { error } = await logoutUser();
-    if (error) {
-      console.error("Error logging out:", error.message);
-    } else {
-      setUser(null); // Clear user state
-      navigate("/"); // Reload the home page
-    }
-  };
+  
 
   return (
     <Box>
-      {/* Top Navigator */}
-      <AppBar position="static" sx={{ backgroundColor: "#FF69B4" }}>
-  <Toolbar sx={{ justifyContent: "space-between" }}>
-    {/* White button with pink text */}
-    <Button
-      variant="contained"
-      sx={{
-        backgroundColor: "#fff",
-        color: "#FF69B4", // Pink text
-        borderRadius: "20px", // Circular shape
-        minWidth: "40px",
-        height: "40px",
-        fontSize: "20px",
-        fontWeight: "bold",
-        textTransform: "none", // Prevent uppercase text
-        "&:hover": {
-          backgroundColor: "#F5F5F5", // Light hover effect
-        },
-      }}
-      onClick={() => navigate("/")} // Optional click handler
-    >
-      αetotfw 🐀
-    </Button>
-
-    {/* Title with pink color */}
-    <Typography
-      variant="h6"
-      sx={{
-        color: "#fff",
-        fontWeight: "bold",
-      }}
-    >
-     🪵 your clothes
-    </Typography>
-
-    {/* Right-side button */}
-    {user ? (
-      <Button sx={{ color: "#fff" }} onClick={handleLogout}>
-        Logout
-      </Button>
-    ) : (
-      <Button sx={{ color: "#fff" }} onClick={() => navigate("/login")}>
-        Login
-      </Button>
-    )}
-  </Toolbar>
-</AppBar>
-
-
-
+    
       {/* Main Content */}
       <Box
         sx={{
@@ -132,18 +76,36 @@ const Home = () => {
             </Button>
           </Box>
         )}
+
         {user && (
-          <Typography
-            variant="body2"
-            sx={{
-              color: "#333",
-              marginTop: "24px",
-              textAlign: "center",
-              fontStyle: "italic",
-            }}
-          >
-            Logged in as {user.email}
-          </Typography>
+          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
+            <Typography
+              variant="body2"
+              sx={{
+                color: "#333",
+                marginTop: "24px",
+                textAlign: "center",
+                fontStyle: "italic",
+              }}
+            >
+              Logged in as {user.email}
+            </Typography>
+            <Button
+              variant="contained"
+              startIcon={<Inventory2Icon />} // Add icon
+              sx={{
+                backgroundColor: "#FF69B4",
+                color: "#fff",
+                "&:hover": { backgroundColor: "#FF1493" },
+                borderRadius: "20px",
+                fontWeight: "bold",
+                textTransform: "none", // Prevent uppercase text
+              }}
+              onClick={() => navigate("/closet")} // Navigate to the closet page
+            >
+              Open Closet
+            </Button>
+          </Box>
         )}
       </Box>
     </Box>

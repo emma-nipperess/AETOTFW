@@ -4,7 +4,9 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Login from "./components/Auth/Login";
 import SignUp from "./components/Auth/SignUp";
 import Home from "./components/Home";
-import Dashboard from "./components/Dashboard";
+import UploadClothes from "./components/UploadClothes";
+import Closet from "./components/Closet";
+import Layout from "./components/Layout";
 
 const theme = createTheme({
   palette: {
@@ -15,15 +17,23 @@ const theme = createTheme({
 });
 
 function App() {
+  const [user, setUser] = React.useState(null);
+
+  const handleLogout = () => {
+    // Add your logout logic here
+    setUser(null);
+  };
   return (
     <ThemeProvider theme={theme}>
       <Router>
         <Routes>
-        <Route path="/" element={<Home />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/signup" element={<SignUp />} />
-          
-          <Route path="/dashboard" element={<Dashboard />} />
+          <Route element={<Layout user={user} handleLogout={handleLogout} />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="/upload" element={<UploadClothes />} />
+            <Route path="/closet" element={<Closet />} />
+          </Route>
         </Routes>
       </Router>
     </ThemeProvider>

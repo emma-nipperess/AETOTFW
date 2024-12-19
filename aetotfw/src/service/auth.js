@@ -61,3 +61,21 @@ export const getCurrentUser = async () => {
   }
   return { user, error };
 };
+
+/**
+ * Retrieves the current authenticated user's ID.
+ * @returns {Promise<string | null>} - The user's ID if authenticated, otherwise null.
+ */
+export const getCurrentUserId = async () => {
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.getUser();
+  
+    if (error) {
+      console.error("Error fetching user ID:", error.message);
+      return null;
+    }
+  
+    return user ? user.id : null;
+  };

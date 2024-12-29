@@ -13,3 +13,5 @@ export const GARMENT_TYPES = [
 
   export const SEASONS = ["Winter", "Spring", "Summer", "Autumn"];
   
+  export const OUTFIT_STATUS = ["worn", "planned", "draft"];
+  

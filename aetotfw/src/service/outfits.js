@@ -51,3 +51,27 @@ export const checkPreviousOutfits = async (outfit_items, crowd) => {
     items: outfit.outfit_items,
   }));
 };
+
+/**
+ * Fetch outfits within a given date range.
+ * @param {string} startDate - The start date in YYYY-MM-DD format.
+ * @param {string} endDate - The end date in YYYY-MM-DD format.
+ * @returns {Promise<Array>} - A list of outfits with date, status, purpose, and items.
+ */
+export const fetchOutfitsByDate = async (startDate, endDate) => {
+  try {
+    const { data, error } = await supabase
+      .from("outfits") // Replace "outfits" with your actual table name
+      .select("wear_date, status, purpose, outfit_items") // Specify the columns you need
+      .gte("wear_date", startDate) // Filter outfits on or after startDate
+      .lte("wear_date", endDate); // Filter outfits on or before endDate
+
+    if (error) {
+      throw new Error(error.message);
+    }
+    return data;
+  } catch (error) {
+    console.error("Error fetching outfits:", error.message);
+    throw error;
+  }
+};

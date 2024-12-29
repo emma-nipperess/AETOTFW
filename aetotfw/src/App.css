@@ -36,3 +36,45 @@
     transform: rotate(360deg);
   }
 }
+
+.react-calendar {
+  width: 800px  !important;
+  
+  height: 100% !important;
+  max-width: 1000px; /* Adjust this value for larger calendars */
+  font-size: 1.5rem; /* Increase font size */
+  margin: auto; /* Center the calendar */
+  margin-top: 0px;
+}
+
+.react-calendar__tile {
+  height: 70px; /* Adjust tile height */
+  width: 100px; /* Adjust tile width */
+  border: 1px solid #ccc; /* Add border */
+  display: flex;
+  flex-direction: column; /* Arrange content vertically */
+  justify-content: flex-start; /* Align content to the top */
+  align-items: center; /* Center content horizontally */
+  padding: 5px; /* Add some padding inside the tile */
+  position: relative; /* Enable positioning for overlays */
+  background-color: #fff; /* Set background color for tiles */
+  transition: background-color 0.3s; /* Add a hover effect */
+}
+
+.react-calendar__tile:hover {
+  background-color: #f0f0f0; /* Slightly darker background on hover */
+}
+
+.react-calendar__tile--now {
+  background-color: #FF69B4; /* Highlight the current date */
+  color: #fff;
+}
+
+.react-calendar__tile--now:hover {
+  background-color: #FF1493; /* Darker pink on hover */
+}
+
+.react-calendar__tile .number {
+  font-weight: bold;
+  font-size: 1.2rem;
+}

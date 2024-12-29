@@ -8,6 +8,7 @@ import UploadClothes from "./components/UploadClothes";
 import Closet from "./components/Closet";
 import Layout from "./components/Layout";
 import LogOutfit from "./components/LogOutfit";
+import CalendarPage from "./components/CalendarPage";
 
 const theme = createTheme({
   palette: {
@@ -35,6 +36,7 @@ function App() {
             <Route path="/upload" element={<UploadClothes />} />
             <Route path="/closet" element={<Closet />} />
             <Route path="/outfit" element={<LogOutfit />} />
+            <Route path="/calendar" element={<CalendarPage />} />
           </Route>
         </Routes>
       </Router>

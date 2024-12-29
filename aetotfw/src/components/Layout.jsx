@@ -6,6 +6,8 @@ import LoginIcon from "@mui/icons-material/Login";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Inventory2Icon from "@mui/icons-material/Inventory2"; // Closet icon
 import UploadIcon from "@mui/icons-material/Upload"; // Upload icon
+import CalendarTodayIcon from "@mui/icons-material/CalendarToday"; // Calendar icon
+import CheckroomIcon from "@mui/icons-material/Checkroom"; // Log an Outfit icon
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -110,6 +112,42 @@ const Layout = () => {
                 onClick={() => navigate("/upload")}
               >
                 Upload a Clothe
+              </Button>
+
+              {/* Calendar */}
+              <Button
+                variant="contained"
+                startIcon={<CalendarTodayIcon />}
+                sx={{
+                  backgroundColor: "#fff",
+                  color: "#FF69B4",
+                  textTransform: "none", // Prevent uppercase text
+                  borderRadius: "8px",
+                  "&:hover": {
+                    backgroundColor: "#F5F5F5",
+                  },
+                }}
+                onClick={() => navigate("/calendar")}
+              >
+                Calendar
+              </Button>
+
+              {/* Log an Outfit */}
+              <Button
+                variant="contained"
+                startIcon={<CheckroomIcon />}
+                sx={{
+                  backgroundColor: "#fff",
+                  color: "#FF69B4",
+                  textTransform: "none", // Prevent uppercase text
+                  borderRadius: "8px",
+                  "&:hover": {
+                    backgroundColor: "#F5F5F5",
+                  },
+                }}
+                onClick={() => navigate("/outfit")}
+              >
+                Log an Outfit
               </Button>
 
               {/* Logout */}

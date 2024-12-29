@@ -36,3 +36,28 @@ export const getItemImage = (fileName) => {
   
     return data.publicUrl;
   };
+
+
+export const fetchClothesByIds = async (itemIds) => {
+  try {
+    const { data, error } = await supabase
+      .from("clothes") // Replace with your actual table name
+      .select("id, name, front_photo")
+      .in("id", itemIds);
+
+    if (error) throw error;
+
+    // Map data to include public image URLs
+    const itemsWithImages = await Promise.all(
+      data.map(async (item) => {
+        const imageUrl = await getItemImage(item.front_photo); // Fetch the public image URL
+        return { ...item, image: imageUrl };
+      })
+    );
+
+    return itemsWithImages;
+  } catch (error) {
+    console.error("Error fetching clothes by IDs:", error.message);
+    return [];
+  }
+};

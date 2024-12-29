@@ -15,13 +15,15 @@ import {
 import { fetchClothes, getItemImage } from "../service/clothes";
 import { recordOutfit, checkPreviousOutfits } from "../service/outfits";
 import { getCurrentUserId } from "../service/auth";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 
 const LogOutfit = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const queryDate = searchParams.get("date"); // Get 'date' from query params
   const [clothes, setClothes] = useState([]);
   const [selectedItems, setSelectedItems] = useState([]);
-  const [wearDate, setWearDate] = useState(new Date());
+  const [wearDate, setWearDate] = useState(queryDate ? new Date(queryDate) : new Date());
   const [purpose, setPurpose] = useState("");
   const [crowd, setCrowd] = useState("");
   const [flaggedOutfits, setFlaggedOutfits] = useState([]);
@@ -30,11 +32,16 @@ const LogOutfit = () => {
     Pants: null,
     Shoes: null,
     Dress: null,
+    Jumper: null,
   });
+
+  // State to manage visibility of the jumper box
+  const [showJumperBox, setShowJumperBox] = useState(false);
 
   // Modal state
   const [openModal, setOpenModal] = useState(false);
   const [modalCategory, setModalCategory] = useState("");
+
   useEffect(() => {
     const loadClothesWithImages = async () => {
       try {
@@ -63,12 +70,12 @@ const LogOutfit = () => {
     if (type === "Dress") {
       newOutfit.Shirt = null;
       newOutfit.Pants = null;
+      newOutfit.Jumper = null;
       newOutfit.Dress = item;
     } else {
       newOutfit.Dress = null;
       newOutfit[type] = item;
     }
-    console.log("selecting something", item)
 
     setOutfitBuilder(newOutfit);
 
@@ -98,7 +105,13 @@ const LogOutfit = () => {
       setFlaggedOutfits(flagged);
 
       alert("Outfit recorded successfully!");
-      window.location.href = "/"
+
+      // Redirect back to the calendar page if the date query is provided
+      if (queryDate) {
+        navigate(`/calendar`);
+      } else {
+        navigate("/");
+      }
     } catch (error) {
       console.error("Error recording outfit:", error.message);
     }
@@ -132,10 +145,9 @@ const LogOutfit = () => {
         </Typography>
 
         <ReactDatePicker
-            selected={wearDate} // Bind the date picker to wearDate
-            onChange={(date) => setWearDate(date)} // Update wearDate when the user selects a date
+          selected={wearDate} // Bind the date picker to wearDate
+          onChange={(date) => setWearDate(date)} // Update wearDate when the user selects a date
         />
-
 
         <TextField
           label="Purpose"
@@ -282,6 +294,55 @@ const LogOutfit = () => {
               Select Shoes
             </Button>
           </Box>
+
+          {/* Jumper */}
+          {showJumperBox && (
+            <Box
+              sx={{
+                width: "300px",
+                height: "150px",
+                border: "2px dashed #FF69B4",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+                position: "relative",
+              }}
+            >
+              {outfitBuilder.Jumper && (
+                <img
+                  src={outfitBuilder.Jumper.image}
+                  alt="Jumper"
+                  style={{ maxWidth: "100%", maxHeight: "100%" }}
+                />
+              )}
+              <Button
+                variant="outlined"
+                sx={{
+                  position: "absolute",
+                  color: "#FF69B4",
+                  borderColor: "#FF69B4",
+                }}
+                onClick={() => handleOpenModal("Jumper")}
+              >
+                Select Jumper
+              </Button>
+            </Box>
+          )}
+
+          {/* Add Jumper Button */}
+          {!showJumperBox && (
+            <Button
+              variant="outlined"
+              sx={{
+                color: "#FF69B4",
+                borderColor: "#FF69B4",
+                marginTop: "16px",
+              }}
+              onClick={() => setShowJumperBox(true)}
+            >
+              Add Jumper
+            </Button>
+          )}
         </Box>
       </Box>
 
@@ -300,7 +361,7 @@ const LogOutfit = () => {
             variant="h6"
             sx={{ textAlign: "center", marginBottom: "16px", color: "#FF69B4" }}
           >
-            Select {modalCategory.charAt(0).toUpperCase() + modalCategory.slice(1)}
+            Select {modalCategory}
           </Typography>
           <Grid2 container spacing={2}>
             {filteredClothes.map((item) => (

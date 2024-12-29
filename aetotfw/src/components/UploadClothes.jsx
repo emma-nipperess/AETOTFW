@@ -58,6 +58,16 @@ const UploadClothes = () => {
 
   return (
     <Box
+    sx={{
+      padding: "20px",
+      backgroundColor: "#FFE4E1",
+      minHeight: "100vh",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+    }}
+  >
+    <Box
       sx={{
         maxWidth: "500px",
         margin: "auto",
@@ -179,6 +189,7 @@ const UploadClothes = () => {
           {loading ? "Uploading..." : "Submit"}
         </Button>
       </form>
+    </Box>
     </Box>
   );
 };

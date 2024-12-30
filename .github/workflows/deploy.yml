@@ -34,6 +34,4 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
         run: |
-          git config --global user.name "emma-nipperess"
-          git config --global user.email "emmanipperess@gmail.com"
           npm run deploy

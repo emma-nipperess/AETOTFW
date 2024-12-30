@@ -15,3 +15,4 @@ export const GARMENT_TYPES = [
   
   export const OUTFIT_STATUS = ["worn", "planned", "draft"];
   
+  export const BASE = "/AETOTFW"

@@ -9,6 +9,7 @@ import UploadIcon from "@mui/icons-material/Upload";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import CheckroomIcon from "@mui/icons-material/Checkroom";
 import MenuIcon from "@mui/icons-material/Menu";
+import { BASE } from "../service/constants";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -34,7 +35,7 @@ const Layout = () => {
       console.error("Error logging out:", error.message);
     } else {
       setUser(null);
-      navigate("/");
+      navigate(BASE, "/");
     }
   };
 
@@ -68,7 +69,7 @@ const Layout = () => {
               "&:hover": { backgroundColor: "#F5F5F5" },
               marginBottom: { xs: "8px", sm: "0" },
             }}
-            onClick={() => navigate("/")}
+            onClick={() => navigate(BASE, "/")}
           >
             αetotfw 🐀
           </Button>
@@ -124,7 +125,7 @@ const Layout = () => {
                       color: "#fff",
                     },
                   }}
-                  onClick={() => navigate("/closet")}
+                  onClick={() => navigate(BASE, "/closet")}
                 >
                   Open Closet
                 </Button>
@@ -140,7 +141,7 @@ const Layout = () => {
                     borderRadius: "8px",
                     "&:hover": { backgroundColor: "#F5F5F5" },
                   }}
-                  onClick={() => navigate("/upload")}
+                  onClick={() => navigate(BASE, "/upload")}
                 >
                   Upload a Clothe
                 </Button>
@@ -156,7 +157,7 @@ const Layout = () => {
                     borderRadius: "8px",
                     "&:hover": { backgroundColor: "#F5F5F5" },
                   }}
-                  onClick={() => navigate("/calendar")}
+                  onClick={() => navigate(BASE, "/calendar")}
                 >
                   Calendar
                 </Button>
@@ -172,7 +173,7 @@ const Layout = () => {
                     borderRadius: "8px",
                     "&:hover": { backgroundColor: "#F5F5F5" },
                   }}
-                  onClick={() => navigate("/outfit")}
+                  onClick={() => navigate(BASE, "/outfit")}
                 >
                   Log an Outfit
                 </Button>
@@ -208,7 +209,7 @@ const Layout = () => {
                   borderRadius: "8px",
                   "&:hover": { backgroundColor: "#F5F5F5" },
                 }}
-                onClick={() => navigate("/login")}
+                onClick={() => navigate(BASE, "/login")}
               >
                 Login
               </Button>

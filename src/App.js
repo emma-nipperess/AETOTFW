@@ -28,7 +28,7 @@ function App() {
   };
   return (
     <ThemeProvider theme={theme}>
-      <Router>
+      <Router basename="/AETOTFW">
         <Routes>
           <Route element={<Layout user={user} handleLogout={handleLogout} />}>
             <Route path="/" element={<Home />} />

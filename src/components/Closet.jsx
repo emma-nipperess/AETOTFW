@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { Box, Typography, TextField, MenuItem } from "@mui/material";
 import Grid2 from "@mui/material/Grid2"; // Use stable Grid2
 import ClothingCard from "./ClothingCard";
@@ -29,26 +29,26 @@ const Closet = () => {
     loadClothes();
   }, []);
 
-  const handleFilterChange = () => {
+  const handleFilterChange = useCallback(() => {
     let filtered = clothes;
-
+  
     if (selectedGarmentType) {
       filtered = filtered.filter(
         (item) => item.garment_type === selectedGarmentType
       );
     }
-
+  
     if (selectedSeason) {
       filtered = filtered.filter((item) => item.season === selectedSeason);
     }
-
+  
     setFilteredClothes(filtered);
-  };
-
+  }, [clothes, selectedGarmentType, selectedSeason]); // Add missing dependencies
+  
   useEffect(() => {
     handleFilterChange();
-  }, [selectedGarmentType, selectedSeason]);
-
+  }, [handleFilterChange]); // Add 'handleFilterChange' as a dependency
+  
   return (
     <Box
       sx={{

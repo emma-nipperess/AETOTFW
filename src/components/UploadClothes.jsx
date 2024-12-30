@@ -23,8 +23,8 @@ const UploadClothes = () => {
       const backPhotoPath = `back-${Date.now()}.jpg`;
 
       // Upload photos to Supabase Storage
-      const frontPhotoUrl = await uploadPhoto(frontPhoto, frontPhotoPath);
-      const backPhotoUrl = await uploadPhoto(backPhoto, backPhotoPath);
+      await uploadPhoto(frontPhoto, frontPhotoPath);
+      await uploadPhoto(backPhoto, backPhotoPath);
 
       const userId = await getCurrentUserId();
 

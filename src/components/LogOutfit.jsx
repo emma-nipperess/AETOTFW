@@ -12,7 +12,6 @@ import {
   CardContent,
   Grid2,
   FormControl,
-  InputLabel,
   Select,
   MenuItem,
 } from "@mui/material";
@@ -32,7 +31,7 @@ const LogOutfit = () => {
   const [purpose, setPurpose] = useState("");
   const [crowd, setCrowd] = useState("");
   const [status, setStatus] = useState(OUTFIT_STATUS[0]);
-  const [flaggedOutfits, setFlaggedOutfits] = useState([]);
+  const [setFlaggedOutfits] = useState([]);
   const [outfitBuilder, setOutfitBuilder] = useState({
     Shirt: null,
     Pants: null,

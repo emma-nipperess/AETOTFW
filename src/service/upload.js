@@ -7,7 +7,7 @@ import { supabase } from "./supabaseClient";
  * @returns {Promise<string>} - The public URL of the uploaded file.
  */
 export const uploadPhoto = async (file, path) => {
-  const { data, error } = await supabase.storage
+  const { error } = await supabase.storage
     .from("clothes") // Replace "photos" with your Supabase Storage bucket name
     .upload(path, file);
 

@@ -1,5 +1,4 @@
 import { supabase } from "./supabaseClient";
-import { getCurrentUserId } from "./auth";
 /**
  * Records an outfit in the database.
  */

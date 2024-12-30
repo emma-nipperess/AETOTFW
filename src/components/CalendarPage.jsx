@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import "../App.css"
 import Calendar from 'react-calendar';
 import "react-calendar/dist/Calendar.css";
-import { Box, Typography, Badge, Button, Modal, Card, CardContent } from "@mui/material";
+import { Box, Typography, Button, Modal, Card, CardContent } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { fetchOutfitsByDate } from "../service/outfits";
 import OutfitCard from "./OutfitCard";
 
 const CalendarPage = () => {
   const navigate = useNavigate();
-  const [currentDate, setCurrentDate] = useState(new Date());
+  const [currentDate] = useState(new Date());
   const [outfits, setOutfits] = useState({});
   const [selectedDay, setSelectedDay] = useState(null);
   const [openModal, setOpenModal] = useState(false);

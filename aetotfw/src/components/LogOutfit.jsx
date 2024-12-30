@@ -11,11 +11,16 @@ import {
   CardMedia,
   CardContent,
   Grid2,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { fetchClothes, getItemImage } from "../service/clothes";
 import { recordOutfit, checkPreviousOutfits } from "../service/outfits";
 import { getCurrentUserId } from "../service/auth";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { OUTFIT_STATUS } from "../service/constants"
 
 const LogOutfit = () => {
   const navigate = useNavigate();
@@ -26,6 +31,7 @@ const LogOutfit = () => {
   const [wearDate, setWearDate] = useState(queryDate ? new Date(queryDate) : new Date());
   const [purpose, setPurpose] = useState("");
   const [crowd, setCrowd] = useState("");
+  const [status, setStatus] = useState(OUTFIT_STATUS[0]);
   const [flaggedOutfits, setFlaggedOutfits] = useState([]);
   const [outfitBuilder, setOutfitBuilder] = useState({
     Shirt: null,
@@ -35,12 +41,14 @@ const LogOutfit = () => {
     Jumper: null,
   });
 
-  // State to manage visibility of the jumper box
+  // State for visibility toggle
+  const [useDressMode, setUseDressMode] = useState(false);
   const [showJumperBox, setShowJumperBox] = useState(false);
 
   // Modal state
   const [openModal, setOpenModal] = useState(false);
   const [modalCategory, setModalCategory] = useState("");
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   useEffect(() => {
     const loadClothesWithImages = async () => {
@@ -99,21 +107,25 @@ const LogOutfit = () => {
         wear_date: wearDate,
         purpose,
         crowd: crowd.split(",").map((person) => person.trim()),
+        status
       }, uid);
 
       const flagged = await checkPreviousOutfits(selectedItems, crowd);
       setFlaggedOutfits(flagged);
 
-      alert("Outfit recorded successfully!");
-
-      // Redirect back to the calendar page if the date query is provided
-      if (queryDate) {
-        navigate(`/calendar`);
-      } else {
-        navigate("/");
-      }
+      setShowSuccessModal(true);
+      
     } catch (error) {
       console.error("Error recording outfit:", error.message);
+    }
+  };
+
+  const handleCloseSuccessModal = () => {
+    setShowSuccessModal(false);
+    if (queryDate) {
+      navigate(`/calendar`);
+    } else {
+      navigate("/");
     }
   };
 
@@ -163,6 +175,20 @@ const LogOutfit = () => {
           fullWidth
           sx={{ marginBottom: "16px" }}
         />
+           {/* Status Selection */}
+           <FormControl fullWidth sx={{ marginBottom: "16px" }}>
+         <Typography> Status </Typography>
+          <Select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+          >
+            {OUTFIT_STATUS.map((option) => (
+              <MenuItem key={option} value={option}>
+                {option}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
         <Button
           variant="contained"
           sx={{
@@ -192,111 +218,152 @@ const LogOutfit = () => {
             gap: "16px",
           }}
         >
-          {/* Shirt or Dress */}
-          <Box
-            sx={{
-              width: "300px",
-              height: "150px",
-              border: "2px dashed #FF69B4",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              position: "relative",
-            }}
-          >
-            {outfitBuilder.Shirt && (
-              <img
-                src={outfitBuilder.Shirt.image}
-                alt="Shirt"
-                style={{ maxWidth: "100%", maxHeight: "100%" }}
-              />
-            )}
-            {outfitBuilder.Dress && (
-              <img
-                src={outfitBuilder.Dress.image}
-                alt="Dress"
-                style={{ maxWidth: "100%", maxHeight: "100%" }}
-              />
-            )}
-            <Button
-              variant="outlined"
-              sx={{
-                position: "absolute",
-                color: "#FF69B4",
-                borderColor: "#FF69B4",
-              }}
-              onClick={() => handleOpenModal("Shirt")}
-            >
-              Select Shirt
-            </Button>
-          </Box>
+          {!useDressMode ? (
+            <>
+              {/* Shirt */}
+              <Box
+                sx={{
+                  width: "300px",
+                  height: "150px",
+                  border: "2px dashed #FF69B4",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  position: "relative",
+                }}
+              >
+                {outfitBuilder.Shirt && (
+                  <img
+                    src={outfitBuilder.Shirt.image}
+                    alt="Shirt"
+                    style={{ maxWidth: "100%", maxHeight: "100%" }}
+                  />
+                )}
+                <Button
+                  variant="outlined"
+                  sx={{
+                    position: "absolute",
+                    color: "#FF69B4",
+                    borderColor: "#FF69B4",
+                  }}
+                  onClick={() => handleOpenModal("Shirt")}
+                >
+                  Select Shirt
+                </Button>
+              </Box>
 
-          {/* Pants */}
-          <Box
-            sx={{
-              width: "300px",
-              height: "150px",
-              border: "2px dashed #FF69B4",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              position: "relative",
-            }}
-          >
-            {outfitBuilder.Pants && (
-              <img
-                src={outfitBuilder.Pants.image}
-                alt="Pants"
-                style={{ maxWidth: "100%", maxHeight: "100%" }}
-              />
-            )}
-            <Button
-              variant="outlined"
-              sx={{
-                position: "absolute",
-                color: "#FF69B4",
-                borderColor: "#FF69B4",
-              }}
-              onClick={() => handleOpenModal("Pants")}
-            >
-              Select Pants
-            </Button>
-          </Box>
+              {/* Pants */}
+              <Box
+                sx={{
+                  width: "300px",
+                  height: "150px",
+                  border: "2px dashed #FF69B4",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  position: "relative",
+                }}
+              >
+                {outfitBuilder.Pants && (
+                  <img
+                    src={outfitBuilder.Pants.image}
+                    alt="Pants"
+                    style={{ maxWidth: "100%", maxHeight: "100%" }}
+                  />
+                )}
+                <Button
+                  variant="outlined"
+                  sx={{
+                    position: "absolute",
+                    color: "#FF69B4",
+                    borderColor: "#FF69B4",
+                  }}
+                  onClick={() => handleOpenModal("Pants")}
+                >
+                  Select Pants
+                </Button>
+              </Box>
 
-          {/* Shoes */}
-          <Box
-            sx={{
-              width: "300px",
-              height: "150px",
-              border: "2px dashed #FF69B4",
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              position: "relative",
-            }}
-          >
-            {outfitBuilder.Shoes && (
-              <img
-                src={outfitBuilder.Shoes.image}
-                alt="Shoes"
-                style={{ maxWidth: "100%", maxHeight: "100%" }}
-              />
-            )}
-            <Button
-              variant="outlined"
-              sx={{
-                position: "absolute",
-                color: "#FF69B4",
-                borderColor: "#FF69B4",
-              }}
-              onClick={() => handleOpenModal("Shoes")}
-            >
-              Select Shoes
-            </Button>
-          </Box>
+                  
+              {/* Shoes */}
+              <Box
+                sx={{
+                  width: "300px",
+                  height: "150px",
+                  border: "2px dashed #FF69B4",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  position: "relative",
+                }}
+              >
+                {outfitBuilder.Shoes && (
+                  <img
+                    src={outfitBuilder.Shoes.image}
+                    alt="Shoes"
+                    style={{ maxWidth: "100%", maxHeight: "100%" }}
+                  />
+                )}
+                <Button
+                  variant="outlined"
+                  sx={{
+                    position: "absolute",
+                    color: "#FF69B4",
+                    borderColor: "#FF69B4",
+                  }}
+                  onClick={() => handleOpenModal("Shoes")}
+                >
+                  Select Shoes
+                </Button>
+              </Box>
 
-          {/* Jumper */}
-          {showJumperBox && (
+              {/* Jumper */}
+              {showJumperBox && (
+                <Box
+                  sx={{
+                    width: "300px",
+                    height: "150px",
+                    border: "2px dashed #FF69B4",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    position: "relative",
+                  }}
+                >
+                  {outfitBuilder.Jumper && (
+                    <img
+                      src={outfitBuilder.Jumper.image}
+                      alt="Jumper"
+                      style={{ maxWidth: "100%", maxHeight: "100%" }}
+                    />
+                  )}
+                  <Button
+                    variant="outlined"
+                    sx={{
+                      position: "absolute",
+                      color: "#FF69B4",
+                      borderColor: "#FF69B4",
+                    }}
+                    onClick={() => handleOpenModal("Jumper")}
+                  >
+                    Select Jumper
+                  </Button>
+                </Box>
+              )}
+              {!showJumperBox && (
+                <Button
+                  variant="outlined"
+                  sx={{
+                    color: "#FF69B4",
+                    borderColor: "#FF69B4",
+                  }}
+                  onClick={() => setShowJumperBox(true)}
+                >
+                  Add Jumper
+                </Button>
+              )}
+            </>
+          ) : (
             <Box
               sx={{
                 width: "300px",
@@ -308,10 +375,10 @@ const LogOutfit = () => {
                 position: "relative",
               }}
             >
-              {outfitBuilder.Jumper && (
+              {outfitBuilder.Dress && (
                 <img
-                  src={outfitBuilder.Jumper.image}
-                  alt="Jumper"
+                  src={outfitBuilder.Dress.image}
+                  alt="Dress"
                   style={{ maxWidth: "100%", maxHeight: "100%" }}
                 />
               )}
@@ -322,27 +389,25 @@ const LogOutfit = () => {
                   color: "#FF69B4",
                   borderColor: "#FF69B4",
                 }}
-                onClick={() => handleOpenModal("Jumper")}
+                onClick={() => handleOpenModal("Dress")}
               >
-                Select Jumper
+                Select Dress
               </Button>
             </Box>
           )}
 
-          {/* Add Jumper Button */}
-          {!showJumperBox && (
-            <Button
-              variant="outlined"
-              sx={{
-                color: "#FF69B4",
-                borderColor: "#FF69B4",
-                marginTop: "16px",
-              }}
-              onClick={() => setShowJumperBox(true)}
-            >
-              Add Jumper
-            </Button>
-          )}
+          {/* Button to toggle between modes */}
+          <Button
+            variant="outlined"
+            sx={{
+              color: "#FF69B4",
+              borderColor: "#FF69B4",
+              marginTop: "16px",
+            }}
+            onClick={() => setUseDressMode(!useDressMode)}
+          >
+            {useDressMode ? "Switch to Shirt & Pants" : "Want to Spread Your Legs?"}
+          </Button>
         </Box>
       </Box>
 
@@ -380,6 +445,53 @@ const LogOutfit = () => {
               </Grid2>
             ))}
           </Grid2>
+        </Box>
+      </Modal>
+
+
+      {/* Success Modal */}
+      <Modal open={showSuccessModal} onClose={handleCloseSuccessModal}>
+        <Box
+          sx={{
+            backgroundColor: "#fff",
+            padding: "30px",
+            maxWidth: "500px",
+            margin: "50px auto",
+            borderRadius: "12px",
+            textAlign: "center",
+            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)",
+          }}
+        >
+          <Typography
+            variant="h4"
+            sx={{
+              color: "#4CAF50",
+              fontWeight: "bold",
+              marginBottom: "16px",
+            }}
+          >
+            🎉 Outfit Recorded!
+          </Typography>
+          <Typography
+            variant="body1"
+            sx={{
+              color: "#555",
+              marginBottom: "24px",
+            }}
+          >
+            Your outfit has been successfully saved. You can now view it in the calendar!
+          </Typography>
+          <Button
+            variant="contained"
+            sx={{
+              backgroundColor: "#FF69B4",
+              color: "#fff",
+              "&:hover": { backgroundColor: "#FF1493" },
+            }}
+            onClick={handleCloseSuccessModal}
+          >
+            Back to Calendar
+          </Button>
         </Box>
       </Modal>
     </Box>

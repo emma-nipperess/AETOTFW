@@ -2,12 +2,6 @@ import { supabase } from "./supabaseClient";
 import { getCurrentUserId } from "./auth";
 /**
  * Records an outfit in the database.
- * @param {Object} outfit - The outfit details.
- * @param {string[]} outfit.outfit_items - Array of clothing item IDs.
- * @param {Date} outfit.wear_date - The date the outfit will be worn.
- * @param {string} outfit.purpose - The purpose for wearing the outfit.
- * @param {string[]} outfit.crowd - Array of people or groups who will see the outfit.
- * @returns {Promise<void>}
  */
 export const recordOutfit = async (outfit, uid) => {
   const { data, error } = await supabase.from("outfits").insert([
@@ -17,6 +11,7 @@ export const recordOutfit = async (outfit, uid) => {
       wear_date: outfit.wear_date.toISOString().split("T")[0], // Format date as YYYY-MM-DD
       purpose: outfit.purpose,
       crowd: outfit.crowd,
+      status: outfit.status
     },
   ]);
 
@@ -35,22 +30,33 @@ export const recordOutfit = async (outfit, uid) => {
  * @returns {Promise<Object[]>} - Array of previously worn outfits that match.
  */
 export const checkPreviousOutfits = async (outfit_items, crowd) => {
-  const { data, error } = await supabase
-    .from("outfits")
-    .select("*")
-    .contains("outfit_items", outfit_items) // Check if items overlap
-    .overlaps("crowd", crowd); // Check if the crowd overlaps
+  try {
+    // Ensure crowd is an array
+    const formattedCrowd = Array.isArray(crowd)
+      ? crowd
+      : crowd.split(",").map((person) => person.trim());
 
-  if (error) {
-    console.error("Error checking previous outfits:", error.message);
-    throw error;
+    const { data, error } = await supabase
+      .from("outfits")
+      .select("*")
+      .contains("outfit_items", outfit_items) // Check if items overlap
+      .overlaps("crowd", formattedCrowd); // Check if the crowd overlaps
+
+    if (error) {
+      console.error("Error checking previous outfits:", error.message);
+      throw error;
+    }
+
+    return data.map((outfit) => ({
+      date: outfit.wear_date,
+      items: outfit.outfit_items,
+    }));
+  } catch (err) {
+    console.error("Error in checkPreviousOutfits:", err.message);
+    throw err;
   }
-
-  return data.map((outfit) => ({
-    date: outfit.wear_date,
-    items: outfit.outfit_items,
-  }));
 };
+
 
 /**
  * Fetch outfits within a given date range.

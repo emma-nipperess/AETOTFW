@@ -66,7 +66,7 @@ const Home = () => {
                 color: "#fff",
                 "&:hover": { backgroundColor: "#FF1493" },
               }}
-              onClick={() => navigate(BASE, "/login")}
+              onClick={() => navigate("/login")}
             >
               Login
             </Button>

@@ -131,6 +131,7 @@ const LogOutfit = () => {
   const garmentTypeMapping = {
     Shirt: ["Shirt", "T-Shirt", "Long sleeve", "Singlet", "Blouse", "Jacket", "Sweater"],
     Pants: ["Pants", "Shorts", "Skirt"],
+    Jumper: ["Sweater", "Jacket"],
   };
   
   const filteredClothes = modalCategory
@@ -364,7 +365,11 @@ const LogOutfit = () => {
                     color: "#FF69B4",
                     borderColor: "#FF69B4",
                   }}
-                  onClick={() => setShowJumperBox(true)}
+                  onClick={() => {
+                    setShowJumperBox(true)
+                    outfitBuilder.Jumper = ""
+                  }
+                }
                 >
                   Add Jumper
                 </Button>

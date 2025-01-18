@@ -128,10 +128,18 @@ const LogOutfit = () => {
     }
   };
 
+  const garmentTypeMapping = {
+    Shirt: ["Shirt", "T-Shirt", "Long sleeve", "Singlet", "Blouse", "Jacket", "Sweater"],
+    Pants: ["Pants", "Shorts", "Skirt"],
+  };
+  
   const filteredClothes = modalCategory
-    ? clothes.filter((item) => item.garment_type === modalCategory)
+    ? clothes.filter((item) => {
+        const mappedTypes = garmentTypeMapping[modalCategory] || [modalCategory];
+        return mappedTypes.includes(item.garment_type);
+      })
     : clothes;
-
+  
   return (
     <Box
       sx={{

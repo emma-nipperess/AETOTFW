@@ -22,21 +22,25 @@ const CalendarPage = () => {
   }, [selectedDay]); // Runs whenever `selectedDay` changes
 
   
-  useEffect(() => {
-    const loadOutfits = async () => {
-      try {
-        const data = await fetchOutfitsByDate("2024-01-01", "2025-06-30"); // Replace with dynamic range
-        const mappedOutfits = data.reduce((acc, outfit) => {
-          acc[outfit.wear_date] = outfit;
-          return acc;
-        }, {});
-        console.log(mappedOutfits)
+  useEffect(() => {const loadOutfits = async () => {
+    try {
+      const data = await fetchOutfitsByDate("2024-01-01", "2025-06-30");
+      const mappedOutfits = data.reduce((acc, outfit) => {
         
-        setOutfits(mappedOutfits);
-      } catch (error) {
-        console.error("Error fetching outfits:", error.message);
-      }
-    };
+        const date = new Date(outfit.wear_date); 
+        // i have no idea why i have to do this and it enrages me moderately but its fine
+        date.setDate(date.getDate() - 1);
+        const normalizedDate = date.toISOString().split("T")[0]; // Get only the date part
+        acc[normalizedDate] = outfit;
+        return acc;
+      }, {});
+  
+      console.log(mappedOutfits);
+      setOutfits(mappedOutfits);
+    } catch (error) {
+      console.error("Error fetching outfits:", error.message);
+    }
+  };  
 
     loadOutfits();
   }, []);
@@ -49,11 +53,15 @@ const CalendarPage = () => {
   const handleAddOutfit = () => {
     navigate(`${BASE}/outfit?date=${selectedDay.toISOString().split("T")[0]}`);
   };
+
   const renderTileContent = ({ date }) => {
-    const dateStr = date.toISOString().split("T")[0];
-    const outfit = outfits[dateStr];
+    // Normalize calendar date to UTC format
+    const normalizedDate = date.toISOString().split("T")[0]; // Get YYYY-MM-DD
+    const outfit = outfits[normalizedDate]; // Match against normalized dates
   
     if (outfit) {
+      console.log("Date in Tile:", normalizedDate);
+  
       return (
         <Box
           sx={{
@@ -62,13 +70,12 @@ const CalendarPage = () => {
             height: "100%",
           }}
         >
-          {/* Overlay Banner */}
           <Box
             sx={{
               position: "absolute",
               left: 0,
               right: 0,
-              height: "100%", // Adjust based on how much of the cell the banner should cover
+              height: "100%",
               backgroundColor:
                 outfit.status === "worn"
                   ? "#FF69B4"

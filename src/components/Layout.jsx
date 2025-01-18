@@ -35,7 +35,7 @@ const Layout = () => {
       console.error("Error logging out:", error.message);
     } else {
       setUser(null);
-      navigate(BASE, "/");
+      navigate("/");
     }
   };
 
@@ -69,7 +69,7 @@ const Layout = () => {
               "&:hover": { backgroundColor: "#F5F5F5" },
               marginBottom: { xs: "8px", sm: "0" },
             }}
-            onClick={() => navigate(BASE, "/")}
+            onClick={() => navigate("/")}
           >
             αetotfw 🐀
           </Button>
@@ -125,7 +125,7 @@ const Layout = () => {
                       color: "#fff",
                     },
                   }}
-                  onClick={() => navigate(BASE, "/closet")}
+                  onClick={() => navigate("/closet")}
                 >
                   Open Closet
                 </Button>
@@ -141,7 +141,7 @@ const Layout = () => {
                     borderRadius: "8px",
                     "&:hover": { backgroundColor: "#F5F5F5" },
                   }}
-                  onClick={() => navigate(BASE, "/upload")}
+                  onClick={() => navigate("/upload")}
                 >
                   Upload a Clothe
                 </Button>
@@ -157,7 +157,7 @@ const Layout = () => {
                     borderRadius: "8px",
                     "&:hover": { backgroundColor: "#F5F5F5" },
                   }}
-                  onClick={() => navigate(BASE, "/calendar")}
+                  onClick={() => navigate("/calendar")}
                 >
                   Calendar
                 </Button>
@@ -173,7 +173,7 @@ const Layout = () => {
                     borderRadius: "8px",
                     "&:hover": { backgroundColor: "#F5F5F5" },
                   }}
-                  onClick={() => navigate(BASE, "/outfit")}
+                  onClick={() => navigate("/outfit")}
                 >
                   Log an Outfit
                 </Button>
@@ -209,7 +209,7 @@ const Layout = () => {
                   borderRadius: "8px",
                   "&:hover": { backgroundColor: "#F5F5F5" },
                 }}
-                onClick={() => navigate(BASE, "/login")}
+                onClick={() => navigate("/login")}
               >
                 Login
               </Button>

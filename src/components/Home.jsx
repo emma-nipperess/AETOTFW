@@ -3,6 +3,7 @@ import { Box, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser } from "../service/auth"; // Import auth functions
 import Inventory2Icon from "@mui/icons-material/Inventory2"; // Closet icon
+import { BASE } from "../service/constants";
 
 const Home = () => {
   const [user, setUser] = useState(null);
@@ -49,7 +50,13 @@ const Home = () => {
           sx={{ color: "#333", marginBottom: "24px", textAlign: "center" }}
         >
           Greetings Future Emma - Emma 12/12/2024
-        </Typography>
+                  </Typography>
+                  <Typography
+          variant="body1"
+          sx={{ color: "#333", fontSize: "10px", marginBottom: "15px", textAlign: "center", maxWidth: "200px" }}
+        >
+         If you are not Emma and you have somehow stumbled upon this page, I have news for you. You cannot sign up. There is no way that I am aware of where you can use any part of this application. It's not that I would even expect you to have wanted to, but I can't be bothered with all the potential security risks that COULD arise with other users.
+                  </Typography>
         {!user && (
           <Box sx={{ display: "flex", gap: "16px" }}>
             <Button
@@ -59,20 +66,9 @@ const Home = () => {
                 color: "#fff",
                 "&:hover": { backgroundColor: "#FF1493" },
               }}
-              onClick={() => navigate("/login")}
+              onClick={() => navigate(BASE, "/login")}
             >
               Login
-            </Button>
-            <Button
-              variant="outlined"
-              sx={{
-                borderColor: "#FF69B4",
-                color: "#FF69B4",
-                "&:hover": { borderColor: "#FF1493", color: "#FF1493" },
-              }}
-              onClick={() => navigate("/signup")}
-            >
-              Sign Up
             </Button>
           </Box>
         )}

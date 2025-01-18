@@ -1,5 +1,6 @@
 export const GARMENT_TYPES = [
     "T-Shirt",
+    "Long sleeve",
     "Singlet",
     "Blouse",
     "Pants",

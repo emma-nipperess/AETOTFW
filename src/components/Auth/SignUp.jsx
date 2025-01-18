@@ -70,19 +70,6 @@ const SignUp = () => {
           onChange={(e) => setPassword(e.target.value)}
           sx={{ marginBottom: "24px" }}
         />
-        <Button
-          type="submit"
-          variant="contained"
-          fullWidth
-          sx={{
-            backgroundColor: "#FF69B4",
-            color: "#fff",
-            padding: "10px 0",
-            "&:hover": { backgroundColor: "#FF1493" },
-          }}
-        >
-          Sign Up
-        </Button>
       </form>
       {error && (
         <Typography variant="body2" sx={{ marginTop: "16px", color: "red" }}>

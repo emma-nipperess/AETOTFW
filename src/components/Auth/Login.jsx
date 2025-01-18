@@ -78,12 +78,6 @@ const Login = () => {
           {error}
         </Typography>
       )}
-      <Typography variant="body2" sx={{ marginTop: "16px" }}>
-        Don't have an account?{" "}
-        <Link href="/signup" sx={{ color: "#FF69B4", fontWeight: "bold" }}>
-          Sign Up
-        </Link>
-      </Typography>
     </Box>
   );
 };

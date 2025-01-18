@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { Box, TextField, Button, Typography, Link } from "@mui/material";
 import { loginUser } from "../../service/auth"; // Import the login function from auth.js
+import { useNavigate } from "react-router-dom";
+import { BASE } from "../../service/constants";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -18,7 +21,7 @@ const Login = () => {
     } else {
       console.log("Logged in successfully:", session);
       // Redirect to dashboard or homepage after login
-      window.location.href = "/"; // Example redirect
+      navigate(BASE);
     }
   };
 

@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
-import { AppBar, Toolbar, Button, Typography, Box, IconButton } from "@mui/material";
-import { getCurrentUser, logoutUser } from "../service/auth";
-import LoginIcon from "@mui/icons-material/Login";
+import { AppBar, Toolbar, Button, Box, IconButton, Drawer, List, ListItem, ListItemIcon, ListItemText } from "@mui/material";
+import MenuIcon from "@mui/icons-material/Menu";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Inventory2Icon from "@mui/icons-material/Inventory2";
 import UploadIcon from "@mui/icons-material/Upload";
 import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import CheckroomIcon from "@mui/icons-material/Checkroom";
-import MenuIcon from "@mui/icons-material/Menu";
-import { BASE } from "../service/constants";
+import LoginIcon from "@mui/icons-material/Login";
+import { getCurrentUser, logoutUser } from "../service/auth";
 
 const Layout = () => {
   const navigate = useNavigate();
@@ -40,7 +39,7 @@ const Layout = () => {
   };
 
   const handleToggleMenu = () => {
-    setMenuOpen((prev) => !prev);
+    setMenuOpen(!menuOpen);
   };
 
   return (
@@ -50,8 +49,7 @@ const Layout = () => {
         <Toolbar
           sx={{
             justifyContent: "space-between",
-            flexDirection: { xs: "column", sm: "row" },
-            alignItems: { xs: "flex-start", sm: "center" },
+            alignItems: "center",
           }}
         >
           {/* Logo */}
@@ -67,24 +65,11 @@ const Layout = () => {
               fontWeight: "bold",
               textTransform: "none",
               "&:hover": { backgroundColor: "#F5F5F5" },
-              marginBottom: { xs: "8px", sm: "0" },
             }}
             onClick={() => navigate("/")}
           >
             αetotfw 🐀
           </Button>
-
-          {/* Title */}
-          <Typography
-            variant="h6"
-            sx={{
-              color: "#fff",
-              fontWeight: "bold",
-              marginBottom: { xs: "8px", sm: "0" },
-            }}
-          >
-            🪵 your clothes
-          </Typography>
 
           {/* Menu Button for Small Devices */}
           <IconButton
@@ -97,20 +82,15 @@ const Layout = () => {
             <MenuIcon />
           </IconButton>
 
-          {/* User-Specific Buttons */}
+          {/* User-Specific Buttons for Large Devices */}
           <Box
             sx={{
-              display: { xs: menuOpen ? "flex" : "none", sm: "flex" },
-              flexDirection: { xs: "column", sm: "row" },
+              display: { xs: "none", sm: "flex" },
               gap: "16px",
-              alignItems: "flex-start",
-              marginTop: { xs: "8px", sm: "0" },
-              width: { xs: "100%", sm: "auto" },
             }}
           >
             {user ? (
               <>
-                {/* Open Closet */}
                 <Button
                   variant="outlined"
                   startIcon={<Inventory2Icon />}
@@ -129,8 +109,6 @@ const Layout = () => {
                 >
                   Open Closet
                 </Button>
-
-                {/* Upload a Clothe */}
                 <Button
                   variant="contained"
                   startIcon={<UploadIcon />}
@@ -145,8 +123,6 @@ const Layout = () => {
                 >
                   Upload a Clothe
                 </Button>
-
-                {/* Calendar */}
                 <Button
                   variant="contained"
                   startIcon={<CalendarTodayIcon />}
@@ -161,8 +137,6 @@ const Layout = () => {
                 >
                   Calendar
                 </Button>
-
-                {/* Log an Outfit */}
                 <Button
                   variant="contained"
                   startIcon={<CheckroomIcon />}
@@ -177,8 +151,6 @@ const Layout = () => {
                 >
                   Log an Outfit
                 </Button>
-
-                {/* Logout */}
                 <Button
                   variant="outlined"
                   startIcon={<LogoutIcon />}
@@ -217,6 +189,59 @@ const Layout = () => {
           </Box>
         </Toolbar>
       </AppBar>
+
+      {/* Side Menu for Small Devices */}
+      <Drawer
+        anchor="right"
+        open={menuOpen}
+        onClose={handleToggleMenu}
+      >
+        <Box sx={{ width: 250 }}>
+          <List>
+            {user ? (
+              <>
+                <ListItem button onClick={() => navigate("/closet")}>
+                  <ListItemIcon>
+                    <Inventory2Icon />
+                  </ListItemIcon>
+                  <ListItemText primary="Open Closet" />
+                </ListItem>
+                <ListItem button onClick={() => navigate("/upload")}>
+                  <ListItemIcon>
+                    <UploadIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Upload a Clothe" />
+                </ListItem>
+                <ListItem button onClick={() => navigate("/calendar")}>
+                  <ListItemIcon>
+                    <CalendarTodayIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Calendar" />
+                </ListItem>
+                <ListItem button onClick={() => navigate("/outfit")}>
+                  <ListItemIcon>
+                    <CheckroomIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Log an Outfit" />
+                </ListItem>
+                <ListItem button onClick={handleLogout}>
+                  <ListItemIcon>
+                    <LogoutIcon />
+                  </ListItemIcon>
+                  <ListItemText primary="Logout" />
+                </ListItem>
+              </>
+            ) : (
+              <ListItem button onClick={() => navigate("/login")}>
+                <ListItemIcon>
+                  <LoginIcon />
+                </ListItemIcon>
+                <ListItemText primary="Login" />
+              </ListItem>
+            )}
+          </List>
+        </Box>
+      </Drawer>
 
       {/* Render page content */}
       <Outlet />

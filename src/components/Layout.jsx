@@ -26,6 +26,19 @@ const Layout = () => {
     };
 
     fetchUser();
+
+     // Listen for login and logout events
+  const handleUserLoggedIn = (e) => setUser(e.detail);
+  const handleUserLoggedOut = () => setUser(null);
+
+  window.addEventListener("userLoggedIn", handleUserLoggedIn);
+  window.addEventListener("userLoggedOut", handleUserLoggedOut);
+
+  // Cleanup event listeners
+  return () => {
+    window.removeEventListener("userLoggedIn", handleUserLoggedIn);
+    window.removeEventListener("userLoggedOut", handleUserLoggedOut);
+  };
   }, []);
 
   const handleLogout = async () => {
@@ -33,6 +46,7 @@ const Layout = () => {
     if (error) {
       console.error("Error logging out:", error.message);
     } else {
+      window.dispatchEvent(new CustomEvent("userLoggedOut"));
       setUser(null);
       navigate("/");
     }
@@ -191,57 +205,90 @@ const Layout = () => {
       </AppBar>
 
       {/* Side Menu for Small Devices */}
-      <Drawer
-        anchor="right"
-        open={menuOpen}
-        onClose={handleToggleMenu}
-      >
-        <Box sx={{ width: 250 }}>
-          <List>
-            {user ? (
-              <>
-                <ListItem button onClick={() => navigate("/closet")}>
-                  <ListItemIcon>
-                    <Inventory2Icon />
-                  </ListItemIcon>
-                  <ListItemText primary="Open Closet" />
-                </ListItem>
-                <ListItem button onClick={() => navigate("/upload")}>
-                  <ListItemIcon>
-                    <UploadIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Upload a Clothe" />
-                </ListItem>
-                <ListItem button onClick={() => navigate("/calendar")}>
-                  <ListItemIcon>
-                    <CalendarTodayIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Calendar" />
-                </ListItem>
-                <ListItem button onClick={() => navigate("/outfit")}>
-                  <ListItemIcon>
-                    <CheckroomIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Log an Outfit" />
-                </ListItem>
-                <ListItem button onClick={handleLogout}>
-                  <ListItemIcon>
-                    <LogoutIcon />
-                  </ListItemIcon>
-                  <ListItemText primary="Logout" />
-                </ListItem>
-              </>
-            ) : (
-              <ListItem button onClick={() => navigate("/login")}>
+      <Drawer anchor="right" open={menuOpen} onClose={handleToggleMenu}>
+      <Box sx={{ width: 250 }}>
+        <List>
+          {user ? (
+            <>
+              <ListItem
+                button
+                onClick={() => {
+                  navigate("/closet");
+                  setMenuOpen(false); // Close the menu
+                }}
+              >
                 <ListItemIcon>
-                  <LoginIcon />
+                  <Inventory2Icon />
                 </ListItemIcon>
-                <ListItemText primary="Login" />
+                <ListItemText primary="Open Closet" />
               </ListItem>
-            )}
-          </List>
-        </Box>
-      </Drawer>
+              <ListItem
+                button
+                onClick={() => {
+                  navigate("/upload");
+                  setMenuOpen(false); // Close the menu
+                }}
+              >
+                <ListItemIcon>
+                  <UploadIcon />
+                </ListItemIcon>
+                <ListItemText primary="Upload a Clothe" />
+              </ListItem>
+              <ListItem
+                button
+                onClick={() => {
+                  navigate("/calendar");
+                  setMenuOpen(false); // Close the menu
+                }}
+              >
+                <ListItemIcon>
+                  <CalendarTodayIcon />
+                </ListItemIcon>
+                <ListItemText primary="Calendar" />
+              </ListItem>
+              <ListItem
+                button
+                onClick={() => {
+                  navigate("/outfit");
+                  setMenuOpen(false); // Close the menu
+                }}
+              >
+                <ListItemIcon>
+                  <CheckroomIcon />
+                </ListItemIcon>
+                <ListItemText primary="Log an Outfit" />
+              </ListItem>
+              <ListItem
+                button
+                onClick={() => {
+                  handleLogout();
+                  setMenuOpen(false); // Close the menu
+                }}
+              >
+                <ListItemIcon>
+                  <LogoutIcon />
+                </ListItemIcon>
+                <ListItemText primary="Logout" />
+              </ListItem>
+            </>
+          ) : (
+            <ListItem
+              button
+              onClick={() => {
+                navigate("/login");
+                setMenuOpen(false); // Close the menu
+              }}
+            >
+              <ListItemIcon>
+                <LoginIcon />
+              </ListItemIcon>
+              <ListItemText primary="Login" />
+            </ListItem>
+          )}
+        </List>
+      </Box>
+    </Drawer>
+
 
       {/* Render page content */}
       <Outlet />

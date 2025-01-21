@@ -19,7 +19,8 @@ const Login = () => {
     if (error) {
       setError(error.message); // Display error to the user
     } else {
-      console.log("Logged in successfully:", session);
+      console.log("Logged in successfully:", email);
+      window.dispatchEvent(new CustomEvent("userLoggedIn", { detail: email }));
       // Redirect to dashboard or homepage after login
       navigate("/");
     }

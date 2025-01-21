@@ -31,7 +31,7 @@ const LogOutfit = () => {
   const [purpose, setPurpose] = useState("");
   const [crowd, setCrowd] = useState("");
   const [status, setStatus] = useState(OUTFIT_STATUS[0]);
-  const [setFlaggedOutfits] = useState([]);
+  const [flaggedOutfits, setFlaggedOutfits] = useState([]);
   const [outfitBuilder, setOutfitBuilder] = useState({
     Shirt: null,
     Pants: null,

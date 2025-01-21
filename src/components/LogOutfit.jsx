@@ -131,7 +131,7 @@ const LogOutfit = () => {
   };
 
   const garmentTypeMapping = {
-    Shirt: ["Shirt", "T-Shirt", "Long sleeve", "Singlet", "Blouse", "Jacket", "Sweater"],
+    Shirt: ["T-Shirt", "Long sleeve", "Singlet", "Blouse", "Jacket", "Sweater"],
     Pants: ["Pants", "Shorts", "Skirt"],
     Jumper: ["Sweater", "Jacket"],
   };

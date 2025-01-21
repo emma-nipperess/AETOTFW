@@ -6,7 +6,6 @@ import { Box, Typography, Button, Modal, Card, CardContent } from "@mui/material
 import { useNavigate } from "react-router-dom";
 import { fetchOutfitsByDate } from "../service/outfits";
 import OutfitCard from "./OutfitCard";
-import { BASE } from "../service/constants";
 
 const CalendarPage = () => {
   const navigate = useNavigate();
@@ -51,7 +50,7 @@ const CalendarPage = () => {
   };
 
   const handleAddOutfit = () => {
-    navigate(`${BASE}/outfit?date=${selectedDay.toISOString().split("T")[0]}`);
+    navigate(`/outfit?date=${selectedDay.toISOString().split("T")[0]}`);
   };
 
   const renderTileContent = ({ date }) => {

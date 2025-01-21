@@ -3,7 +3,6 @@ import { Box, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser } from "../service/auth"; // Import auth functions
 import Inventory2Icon from "@mui/icons-material/Inventory2"; // Closet icon
-import { BASE } from "../service/constants";
 
 const Home = () => {
   const [user, setUser] = useState(null);

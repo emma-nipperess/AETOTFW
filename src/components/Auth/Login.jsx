@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Box, TextField, Button, Typography, Link } from "@mui/material";
 import { loginUser } from "../../service/auth"; // Import the login function from auth.js
 import { useNavigate } from "react-router-dom";
-import { BASE } from "../../service/constants";
 
 const Login = () => {
   const [email, setEmail] = useState("");

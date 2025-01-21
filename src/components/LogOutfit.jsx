@@ -19,7 +19,7 @@ import { fetchClothes, getItemImage } from "../service/clothes";
 import { recordOutfit, checkPreviousOutfits } from "../service/outfits";
 import { getCurrentUserId } from "../service/auth";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { OUTFIT_STATUS, BASE } from "../service/constants"
+import { OUTFIT_STATUS } from "../service/constants"
 
 const LogOutfit = () => {
   const navigate = useNavigate();
@@ -124,9 +124,9 @@ const LogOutfit = () => {
   const handleCloseSuccessModal = () => {
     setShowSuccessModal(false);
     if (queryDate) {
-      navigate(`${BASE}/calendar`);
+      navigate(`/calendar`);
     } else {
-      navigate(BASE, "/");
+      navigate("/");
     }
   };
 

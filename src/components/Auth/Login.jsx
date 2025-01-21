@@ -21,7 +21,7 @@ const Login = () => {
     } else {
       console.log("Logged in successfully:", session);
       // Redirect to dashboard or homepage after login
-      navigate(BASE);
+      navigate("/");
     }
   };
 

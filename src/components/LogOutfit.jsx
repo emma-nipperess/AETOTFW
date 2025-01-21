@@ -48,6 +48,7 @@ const LogOutfit = () => {
   const [openModal, setOpenModal] = useState(false);
   const [modalCategory, setModalCategory] = useState("");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [currentFilter, setCurrentFilter] = useState("");
 
   useEffect(() => {
     const loadClothesWithImages = async () => {
@@ -94,6 +95,7 @@ const LogOutfit = () => {
 
   const handleOpenModal = (category) => {
     setModalCategory(category);
+    setCurrentFilter(""); // Reset filter on modal open
     setOpenModal(true);
   };
 
@@ -134,12 +136,14 @@ const LogOutfit = () => {
     Jumper: ["Sweater", "Jacket"],
   };
   
-  const filteredClothes = modalCategory
-    ? clothes.filter((item) => {
-        const mappedTypes = garmentTypeMapping[modalCategory] || [modalCategory];
-        return mappedTypes.includes(item.garment_type);
-      })
-    : clothes;
+  const filteredClothes = clothes.filter((item) => {
+    const mappedTypes = garmentTypeMapping[modalCategory] || [modalCategory];
+    if (currentFilter) {
+      return mappedTypes.includes(item.garment_type) && item.garment_type === currentFilter;
+    }
+    return mappedTypes.includes(item.garment_type);
+  });
+  
   
   return (
     <Box
@@ -148,10 +152,11 @@ const LogOutfit = () => {
         backgroundColor: "#FFE4E1",
         minHeight: "100vh",
         display: "flex",
+        flexWrap: "wrap"
       }}
     >
       {/* Form Section */}
-      <Box sx={{ flex: 1, maxWidth: "400px", marginRight: "20px" }}>
+      <Box sx={{ flex: 1, maxWidth: "400px", minWidth: "300px", marginRight: "20px" }}>
         <Typography
           variant="h4"
           sx={{
@@ -197,17 +202,7 @@ const LogOutfit = () => {
             ))}
           </Select>
         </FormControl>
-        <Button
-          variant="contained"
-          sx={{
-            backgroundColor: "#FF69B4",
-            color: "#fff",
-            "&:hover": { backgroundColor: "#FF1493" },
-          }}
-          onClick={handleSubmit}
-        >
-          Record Outfit
-        </Button>
+       
       </Box>
 
       {/* Outfit Builder Section */}
@@ -421,7 +416,21 @@ const LogOutfit = () => {
             {useDressMode ? "Switch to Shirt & Pants" : "Want to Spread Your Legs?"}
           </Button>
         </Box>
+
+        <Button
+          variant="contained"
+          sx={{
+            backgroundColor: "#FF69B4",
+            margin: "20px",
+            color: "#fff",
+            "&:hover": { backgroundColor: "#FF1493" },
+          }}
+          onClick={handleSubmit}
+        >
+          Record Outfit
+        </Button>
       </Box>
+      
 
       {/* Modal for selecting items */}
       <Modal open={openModal} onClose={() => setOpenModal(false)}>
@@ -429,9 +438,12 @@ const LogOutfit = () => {
           sx={{
             backgroundColor: "#fff",
             padding: "20px",
-            maxWidth: "600px",
+            width: "75%", // Width relative to viewport width
+            height: "85vh", // Fixed height as 90% of viewport height
+            overflowY: "auto", // Enable vertical scrolling
             margin: "50px auto",
             borderRadius: "8px",
+            boxShadow: "0px 4px 20px rgba(0, 0, 0, 0.2)", // Optional shadow
           }}
         >
           <Typography
@@ -440,6 +452,25 @@ const LogOutfit = () => {
           >
             Select {modalCategory}
           </Typography>
+
+            {/* Filter Dropdown */}
+          <FormControl fullWidth sx={{ marginBottom: "16px" }}>
+            <Select
+              value={currentFilter}
+              onChange={(e) => setCurrentFilter(e.target.value)}
+              displayEmpty
+            >
+              <MenuItem value="">
+                <em>All</em>
+              </MenuItem>
+              {garmentTypeMapping[modalCategory]?.map((type) => (
+                <MenuItem key={type} value={type}>
+                  {type}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
           <Grid2 container spacing={2}>
             {filteredClothes.map((item) => (
               <Grid2 item xs={6} key={item.id}>

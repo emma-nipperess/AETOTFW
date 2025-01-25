@@ -13,27 +13,6 @@ const Home = () => {
   const { user, loading } = useContext(AuthContext); // Access user from context
   const isPrerendering = navigator.userAgent === "ReactSnap";
   
-  useEffect(() => {
-    if (!user && !loading && !isPrerendering) {
-      console.log("user nad loading is pre", user, loading, isPrerendering)
-      navigate("/login"); // Redirect to login if user is not authenticated
-      return;
-    }
-
-    const fetchUser = async () => {
-      const { user, error } = await getCurrentUser();
-      if (user) {
-        setUser(user); // Set user if authenticated
-      } else if (error) {
-        console.error("Error fetching user:", error.message);
-      }
-    };
-
-    fetchUser();
-  }, []);
-
-  
-
   return (
     <Box>
     
@@ -67,7 +46,7 @@ const Home = () => {
         >
          If you are not Emma and you have somehow stumbled upon this page, I have news for you. You cannot sign up. There is no way that I am aware of where you can use any part of this application. It's not that I would even expect you to have wanted to, but I can't be bothered with all the potential security risks that COULD arise with other users.
                   </Typography>
-        {!userProfile && (
+        {!user && (
           <Box sx={{ display: "flex", gap: "16px" }}>
             <Button
               variant="contained"
@@ -83,7 +62,7 @@ const Home = () => {
           </Box>
         )}
 
-        {userProfile && (
+        {user && (
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
             <Typography
               variant="body2"
@@ -94,7 +73,7 @@ const Home = () => {
                 fontStyle: "italic",
               }}
             >
-              Logged in as {userProfile.email}
+              Logged in as {user}
             </Typography>
             <Button
               variant="contained"

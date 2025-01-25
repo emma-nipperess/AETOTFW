@@ -9,48 +9,40 @@ import CalendarTodayIcon from "@mui/icons-material/CalendarToday";
 import CheckroomIcon from "@mui/icons-material/Checkroom";
 import LoginIcon from "@mui/icons-material/Login";
 import { getCurrentUser, logoutUser } from "../service/auth";
+import { useAuth } from "./Auth/AuthContext";
 
 const Layout = () => {
   const navigate = useNavigate();
-  const [user, setUser] = useState(null);
+  const { user, setUser } = useAuth(); // Use user and setUser from AuthContext
   const [menuOpen, setMenuOpen] = useState(false);
 
+
   useEffect(() => {
+    // Fetch user on mount if not already set
     const fetchUser = async () => {
-      const { user, error } = await getCurrentUser();
-      if (user) {
-        setUser(user);
-      } else if (error) {
-        console.error("Error fetching user:", error.message);
+      if (!user) {
+        const { user: fetchedUser, error } = await getCurrentUser();
+        if (fetchedUser) {
+          setUser(fetchedUser);
+        } else if (error) {
+          console.error("Error fetching user:", error.message);
+        }
       }
     };
 
     fetchUser();
-
-     // Listen for login and logout events
-  const handleUserLoggedIn = (e) => setUser(e.detail);
-  const handleUserLoggedOut = () => setUser(null);
-
-  window.addEventListener("userLoggedIn", handleUserLoggedIn);
-  window.addEventListener("userLoggedOut", handleUserLoggedOut);
-
-  // Cleanup event listeners
-  return () => {
-    window.removeEventListener("userLoggedIn", handleUserLoggedIn);
-    window.removeEventListener("userLoggedOut", handleUserLoggedOut);
-  };
-  }, []);
+  }, [user, setUser]);
 
   const handleLogout = async () => {
     const { error } = await logoutUser();
     if (error) {
       console.error("Error logging out:", error.message);
     } else {
-      window.dispatchEvent(new CustomEvent("userLoggedOut"));
-      setUser(null);
-      navigate("/");
+      setUser(null); // Clear the user from AuthContext
+      navigate("/"); // Redirect to home
     }
   };
+
 
   const handleToggleMenu = () => {
     setMenuOpen(!menuOpen);

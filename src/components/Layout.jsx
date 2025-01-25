@@ -84,15 +84,11 @@ const Layout = () => {
                   variant="outlined"
                   startIcon={<Inventory2Icon />}
                   sx={{
-                    borderColor: "#fff",
-                    color: "#fff",
+                    backgroundColor: "#fff",
+                    color: "#FF69B4",
                     textTransform: "none",
                     borderRadius: "8px",
-                    "&:hover": {
-                      borderColor: "#FF69B4",
-                      backgroundColor: "#FF69B4",
-                      color: "#fff",
-                    },
+                    "&:hover": { backgroundColor: "#F5F5F5" },
                   }}
                   onClick={() => navigate("/closet")}
                 >

@@ -92,10 +92,10 @@ const Closet = () => {
         {/* Filter by Garment Type */}
         <TextField
           select
-          label="Filter by Garment Type"
+          label="Filter by Type"
           value={selectedGarmentType}
           onChange={(e) => setSelectedGarmentType(e.target.value)}
-          sx={{ minWidth: "200px" }}
+          sx={{ minWidth: "160px" }}
         >
           <MenuItem value="">All</MenuItem>
           {GARMENT_TYPES.map((type) => (
@@ -111,7 +111,7 @@ const Closet = () => {
           label="Filter by Season"
           value={selectedSeason}
           onChange={(e) => setSelectedSeason(e.target.value)}
-          sx={{ minWidth: "200px" }}
+          sx={{ minWidth: "160px" }}
         >
           <MenuItem value="">All</MenuItem>
           {SEASONS.map((season) => (

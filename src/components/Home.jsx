@@ -3,12 +3,21 @@ import { Box, Typography, Button } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { getCurrentUser } from "../service/auth"; // Import auth functions
 import Inventory2Icon from "@mui/icons-material/Inventory2"; // Closet icon
+import { useContext } from "react";
+import { AuthContext } from "./Auth/AuthContext";
 
 const Home = () => {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
+  
+  const { user: isLogged, loading } = useContext(AuthContext); // Access user from context
 
   useEffect(() => {
+    if (!isLogged && !loading) {
+      navigate("/login"); // Redirect to login if user is not authenticated
+      return;
+    }
+
     const fetchUser = async () => {
       const { user, error } = await getCurrentUser();
       if (user) {

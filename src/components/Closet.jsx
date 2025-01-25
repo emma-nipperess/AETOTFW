@@ -1,18 +1,27 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useContext } from "react";
 import { Box, Typography, TextField, MenuItem } from "@mui/material";
 import Grid2 from "@mui/material/Grid2"; // Use stable Grid2
 import ClothingCard from "./ClothingCard";
 import { fetchClothes } from "../service/clothes"; // Import the function
 import { GARMENT_TYPES, SEASONS } from "../service/constants"; // Import constants
+import { AuthContext } from "./Auth/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const Closet = () => {
+  const { user, loading } = useContext(AuthContext); // Access user from context
   const [clothes, setClothes] = useState([]);
   const [filteredClothes, setFilteredClothes] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [pageLoading, setLoading] = useState(true);
   const [selectedGarmentType, setSelectedGarmentType] = useState("");
   const [selectedSeason, setSelectedSeason] = useState("");
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if (!user && !loading) {
+      navigate("/login"); // Redirect to login if user is not authenticated
+      return;
+    }
+
     const loadClothes = async () => {
       setLoading(true);
       try {
@@ -111,7 +120,7 @@ const Closet = () => {
         </TextField>
       </Box>
 
-      {loading ? (
+      {pageLoading ? (
         <Typography variant="body1" sx={{ textAlign: "center" }}>
           Loading...
         </Typography>

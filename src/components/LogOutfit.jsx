@@ -20,6 +20,10 @@ import { recordOutfit, checkPreviousOutfits } from "../service/outfits";
 import { getCurrentUserId } from "../service/auth";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { OUTFIT_STATUS } from "../service/constants"
+import { fetchCrowdOptions, addCrowdOption, uploadCrowdForOutfit } from "../service/crowd";
+import Autocomplete from "@mui/material/Autocomplete"; // Import Autocomplete for dropdown
+import { useContext } from "react";
+import { AuthContext } from "./Auth/AuthContext";
 
 const LogOutfit = () => {
   const navigate = useNavigate();
@@ -49,6 +53,35 @@ const LogOutfit = () => {
   const [modalCategory, setModalCategory] = useState("");
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [currentFilter, setCurrentFilter] = useState("");
+
+  const [crowdOptions, setCrowdOptions] = useState([]); // Crowd options from Supabase
+  const [selectedCrowd, setSelectedCrowd] = useState([]); // Selected crowd values
+
+  const { user, loading } = useContext(AuthContext); // Access user from context
+
+  
+  // Fetch crowd options on load
+  useEffect(() => {
+
+    if (!user && !loading) {
+      navigate("/login"); // Redirect to login if user is not authenticated
+      return;
+    }
+    
+    const loadCrowdOptions = async () => {
+      const options = await fetchCrowdOptions();
+      setCrowdOptions(options);
+    };
+    loadCrowdOptions();
+  }, []);
+
+  const handleAddCrowdOption = async (name) => {
+    const newOption = await addCrowdOption(name);
+    if (newOption) {
+      setCrowdOptions((prev) => [...prev, newOption]); // Add new option to dropdown
+      setSelectedCrowd((prev) => [...prev, newOption]); // Automatically select the new option
+    }
+  };
 
   useEffect(() => {
     const loadClothesWithImages = async () => {
@@ -103,7 +136,7 @@ const LogOutfit = () => {
     try {
       const uid = await getCurrentUserId();
 
-      await recordOutfit({
+      const outfit = await recordOutfit({
         outfit_items: selectedItems,
         wear_date: wearDate,
         purpose,
@@ -111,8 +144,13 @@ const LogOutfit = () => {
         status
       }, uid);
 
-      const flagged = await checkPreviousOutfits(selectedItems, crowd);
-      setFlaggedOutfits(flagged);
+      // Record the crowd for the outfit
+      if (outfit && outfit.id) {
+        uploadCrowdForOutfit(outfit.id, selectedCrowd)
+      }
+
+      //const flagged = await checkPreviousOutfits(selectedItems, crowd);
+      //setFlaggedOutfits(flagged);
 
       setShowSuccessModal(true);
       
@@ -181,13 +219,43 @@ const LogOutfit = () => {
           fullWidth
           sx={{ marginBottom: "16px", marginTop: "16px" }}
         />
-        <TextField
-          label="Crowd (comma-separated)"
-          value={crowd}
-          onChange={(e) => setCrowd(e.target.value)}
-          fullWidth
-          sx={{ marginBottom: "16px" }}
-        />
+        
+        <FormControl fullWidth sx={{ marginBottom: "16px" }}>
+          <Typography> Crowd </Typography>
+          <Autocomplete
+            multiple
+            freeSolo // Allow user to type and add custom options
+            options={crowdOptions}
+            getOptionLabel={(option) => option.name || option} // Handle both existing and custom options
+            value={selectedCrowd}
+            onChange={async (event, newValue, reason) => {
+              // Handle when the user confirms a selection or adds a new option
+              if (reason === "selectOption" || reason === "createOption") {
+                const addedOption = newValue[newValue.length - 1];
+
+                // If it's a new custom option, add it to the database
+                if (typeof addedOption === "string") {
+                  const newOption = await handleAddCrowdOption(addedOption);
+                  if (newOption) {
+                    // Replace the temporary string with the database entry
+                    setSelectedCrowd((prev) =>
+                      prev.map((item) => (item === addedOption ? newOption : item))
+                    );
+                  }
+                } else {
+                  setSelectedCrowd(newValue); // Add existing option
+                }
+              } else {
+                setSelectedCrowd(newValue); // Update state for any other reason
+              }
+            }}
+            renderInput={(params) => (
+              <TextField {...params} label="Select or Add Crowd" placeholder="Crowd" />
+            )}
+          />
+        </FormControl>
+
+      
            {/* Status Selection */}
            <FormControl fullWidth sx={{ marginBottom: "16px" }}>
          <Typography> Status </Typography>

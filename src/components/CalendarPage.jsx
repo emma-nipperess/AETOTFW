@@ -6,8 +6,11 @@ import { Box, Typography, Button, Modal, Card, CardContent } from "@mui/material
 import { useNavigate } from "react-router-dom";
 import { fetchOutfitsByDate } from "../service/outfits";
 import OutfitCard from "./OutfitCard";
+import { useContext } from "react";
+import { AuthContext } from "./Auth/AuthContext";
 
 const CalendarPage = () => {
+  const { user, loading } = useContext(AuthContext); // Access user from context
   const navigate = useNavigate();
   const [currentDate] = useState(new Date());
   const [outfits, setOutfits] = useState({});
@@ -15,6 +18,11 @@ const CalendarPage = () => {
   const [openModal, setOpenModal] = useState(false);
 
   useEffect(() => {
+    if (!user && !loading) {
+      navigate("/login"); // Redirect to login if user is not authenticated
+      return;
+    }
+
     if (selectedDay) {
       console.log("Selected Day:", selectedDay);
     }
@@ -50,7 +58,11 @@ const CalendarPage = () => {
   };
 
   const handleAddOutfit = () => {
-    navigate(`/outfit?date=${selectedDay.toISOString().split("T")[0]}`);
+    const nextDay = new Date(selectedDay);
+    nextDay.setDate(nextDay.getDate() + 1);
+    const nextDayFormatted = nextDay.toISOString().split("T")[0];
+
+    navigate(`/outfit?date=${nextDayFormatted}`);
   };
 
   const renderTileContent = ({ date }) => {

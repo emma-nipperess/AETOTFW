@@ -1,8 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Box, TextField, Button, Typography, MenuItem } from "@mui/material";
 import { uploadPhoto, saveClothingItem } from "../service/upload"; // Import upload functions
 import { getCurrentUserId } from "../service/auth";
 import { GARMENT_TYPES, SEASONS } from "../service/constants";
+import { useContext } from "react";
+import { AuthContext } from "./Auth/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 const UploadClothes = () => {
   const [name, setName] = useState("");
@@ -12,7 +15,18 @@ const UploadClothes = () => {
   const [season, setSeason] = useState("");
   const [keywords, setKeywords] = useState("");
   const [loading, setLoading] = useState(false);
+  const navigate = useNavigate();
 
+  const { user, loading: userLoading } = useContext(AuthContext); // Access user from context
+  useEffect(() => {
+
+      if (!user && !userLoading) {
+        navigate("/login"); // Redirect to login if user is not authenticated
+        return;
+      }
+      
+    }, []);
+    
   const handleUpload = async (e) => {
     e.preventDefault();
     setLoading(true);

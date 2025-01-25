@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import Login from "./components/Auth/Login";
 import SignUp from "./components/Auth/SignUp";
+import { AuthProvider } from "./components/Auth/AuthContext";
 import Home from "./components/Home";
 import UploadClothes from "./components/UploadClothes";
 import Closet from "./components/Closet";
@@ -27,6 +28,7 @@ function App() {
     setUser(null);
   };
   return (
+    <AuthProvider>
     <ThemeProvider theme={theme}>
       <Router basename="/AETOTFW">
         <Routes>
@@ -43,6 +45,7 @@ function App() {
         </Routes>
       </Router>
     </ThemeProvider>
+    </AuthProvider>
   );
 }
 

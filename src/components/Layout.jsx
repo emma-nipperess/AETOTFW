@@ -16,23 +16,6 @@ const Layout = () => {
   const { user, setUser } = useAuth(); // Use user and setUser from AuthContext
   const [menuOpen, setMenuOpen] = useState(false);
 
-
-  useEffect(() => {
-    // Fetch user on mount if not already set
-    const fetchUser = async () => {
-      if (!user) {
-        const { user: fetchedUser, error } = await getCurrentUser();
-        if (fetchedUser) {
-          setUser(fetchedUser);
-        } else if (error) {
-          console.error("Error fetching user:", error.message);
-        }
-      }
-    };
-
-    fetchUser();
-  }, [user, setUser]);
-
   const handleLogout = async () => {
     const { error } = await logoutUser();
     if (error) {

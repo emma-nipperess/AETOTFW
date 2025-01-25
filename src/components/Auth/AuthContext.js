@@ -10,6 +10,13 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const isPrerendering = navigator.userAgent === "ReactSnap";
+    if (isPrerendering) {
+      // If pre-rendering, skip fetching the user
+      setLoading(false);
+      return;
+    }
+    
     // Fetch the current user on mount
     const fetchUser = async () => {
       const { user, error } = await getCurrentUser();

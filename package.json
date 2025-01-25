@@ -1,7 +1,7 @@
 {
   "name": "aetotfw",
   "version": "0.1.0",
-  "homepage": "https://emma-nipperess.github.io/AETOTFW",
+  "homepage": "https://emma-nipperess.github.io/AETOTFW/",
   "private": true,
   "dependencies": {
     "@emotion/react": "^11.14.0",
@@ -28,7 +28,11 @@
     "test": "react-scripts test",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "postbuild": "react-snap"
+  },
+  "reactSnap": {
+    "inlineCss": true
   },
   "eslintConfig": {
     "extends": [

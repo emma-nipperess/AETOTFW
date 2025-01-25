@@ -16,9 +16,10 @@ const CalendarPage = () => {
   const [outfits, setOutfits] = useState({});
   const [selectedDay, setSelectedDay] = useState(null);
   const [openModal, setOpenModal] = useState(false);
-
+  const isPrerendering = navigator.userAgent === "ReactSnap";
+  
   useEffect(() => {
-    if (!user && !loading) {
+    if (!user && !loading && !isPrerendering) {
       navigate("/login"); // Redirect to login if user is not authenticated
       return;
     }

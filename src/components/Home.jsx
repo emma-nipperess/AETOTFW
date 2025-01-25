@@ -7,13 +7,15 @@ import { useContext } from "react";
 import { AuthContext } from "./Auth/AuthContext";
 
 const Home = () => {
-  const [user, setUser] = useState(null);
+  const [userProfile, setUser] = useState(null);
   const navigate = useNavigate();
   
-  const { user: isLogged, loading } = useContext(AuthContext); // Access user from context
-
+  const { user, loading } = useContext(AuthContext); // Access user from context
+  const isPrerendering = navigator.userAgent === "ReactSnap";
+  
   useEffect(() => {
-    if (!isLogged && !loading) {
+    if (!user && !loading && !isPrerendering) {
+      console.log("user nad loading is pre", user, loading, isPrerendering)
       navigate("/login"); // Redirect to login if user is not authenticated
       return;
     }
@@ -65,7 +67,7 @@ const Home = () => {
         >
          If you are not Emma and you have somehow stumbled upon this page, I have news for you. You cannot sign up. There is no way that I am aware of where you can use any part of this application. It's not that I would even expect you to have wanted to, but I can't be bothered with all the potential security risks that COULD arise with other users.
                   </Typography>
-        {!user && (
+        {!userProfile && (
           <Box sx={{ display: "flex", gap: "16px" }}>
             <Button
               variant="contained"
@@ -81,7 +83,7 @@ const Home = () => {
           </Box>
         )}
 
-        {user && (
+        {userProfile && (
           <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
             <Typography
               variant="body2"
@@ -92,7 +94,7 @@ const Home = () => {
                 fontStyle: "italic",
               }}
             >
-              Logged in as {user.email}
+              Logged in as {userProfile.email}
             </Typography>
             <Button
               variant="contained"

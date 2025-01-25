@@ -1,4 +1,4 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect, useContext } from "react";
 import { getCurrentUser, logoutUser } from "../../service/auth";
 
 // Create the context
@@ -30,9 +30,14 @@ export const AuthProvider = ({ children }) => {
     else console.error("Error logging out:", error.message);
   };
 
+  
   return (
     <AuthContext.Provider value={{ user, setUser, logout, loading }}>
       {children}
     </AuthContext.Provider>
   );
 };
+
+
+// Hook to use the AuthContext
+export const useAuth = () => useContext(AuthContext);

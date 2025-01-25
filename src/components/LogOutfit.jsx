@@ -61,13 +61,13 @@ const LogOutfit = () => {
 
   
   // Fetch crowd options on load
+  const isPrerendering = navigator.userAgent === "ReactSnap";
+   
   useEffect(() => {
-
-    if (!user && !loading) {
+    if (!user && !loading && !isPrerendering) {
       navigate("/login"); // Redirect to login if user is not authenticated
       return;
     }
-    
     const loadCrowdOptions = async () => {
       const options = await fetchCrowdOptions();
       setCrowdOptions(options);

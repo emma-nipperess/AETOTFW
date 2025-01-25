@@ -16,11 +16,13 @@ const Closet = () => {
   const [selectedSeason, setSelectedSeason] = useState("");
   const navigate = useNavigate();
 
+   const isPrerendering = navigator.userAgent === "ReactSnap";
+    
   useEffect(() => {
-    if (!user && !loading) {
-      navigate("/login"); // Redirect to login if user is not authenticated
-      return;
-    }
+      if (!user && !loading && !isPrerendering) {
+        navigate("/login"); // Redirect to login if user is not authenticated
+        return;
+      }
 
     const loadClothes = async () => {
       setLoading(true);

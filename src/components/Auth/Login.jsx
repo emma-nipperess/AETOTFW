@@ -2,12 +2,14 @@ import React, { useState } from "react";
 import { Box, TextField, Button, Typography, Link } from "@mui/material";
 import { loginUser } from "../../service/auth"; // Import the login function from auth.js
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "./AuthContext";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const { setUser } = useAuth(); // Access the setUser function from AuthContext
 
   const handleLogin = async (event) => {
     event.preventDefault();
@@ -19,7 +21,10 @@ const Login = () => {
       setError(error.message); // Display error to the user
     } else {
       console.log("Logged in successfully:", email);
-      window.dispatchEvent(new CustomEvent("userLoggedIn", { detail: email }));
+       // Update the AuthContext with the logged-in user's information
+      setUser(email); // Assuming `session.user` contains user data
+      console.log(session)
+      //window.dispatchEvent(new CustomEvent("userLoggedIn", { detail: email }));
       // Redirect to dashboard or homepage after login
       navigate("/");
     }

@@ -18,12 +18,13 @@ const UploadClothes = () => {
   const navigate = useNavigate();
 
   const { user, loading: userLoading } = useContext(AuthContext); // Access user from context
+  const isPrerendering = navigator.userAgent === "ReactSnap";
+  
   useEffect(() => {
-
-      if (!user && !userLoading) {
-        navigate("/login"); // Redirect to login if user is not authenticated
-        return;
-      }
+    if (!user && !loading && !isPrerendering) {
+      navigate("/login"); // Redirect to login if user is not authenticated
+      return;
+    }
       
     }, []);
     

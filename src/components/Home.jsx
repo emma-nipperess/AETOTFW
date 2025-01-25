@@ -73,7 +73,7 @@ const Home = () => {
                 fontStyle: "italic",
               }}
             >
-              Logged in as {user}
+              Logged in as {user.email}
             </Typography>
             <Button
               variant="contained"

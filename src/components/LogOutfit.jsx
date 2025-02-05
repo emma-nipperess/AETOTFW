@@ -144,8 +144,10 @@ const LogOutfit = () => {
         status
       }, uid);
 
+      console.log(selectedCrowd, "crowd to be selected", outfit)
       // Record the crowd for the outfit
       if (outfit && outfit.id) {
+
         uploadCrowdForOutfit(outfit.id, selectedCrowd)
       }
 

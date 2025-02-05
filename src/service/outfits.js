@@ -12,14 +12,17 @@ export const recordOutfit = async (outfit, uid) => {
       crowd: outfit.crowd,
       status: outfit.status
     },
-  ]);
+  ])
+  .select("id");
+
+  console.log(data, "datasigma")
 
   if (error) {
     console.error("Error recording outfit:", error.message);
     throw error;
   }
 
-  return data;
+  return data[0];
 };
 
 /**
